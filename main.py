@@ -1,10 +1,10 @@
 from pygame import *
         
-window = display.set_mode((500, 700))
+window = display.set_mode((600, 800))
 
 window.fill((0,0,0))
              
-display.set_caption('')
+display.set_caption('ping-pong')
 clock = time.Clock()
 
 mixer.init()
