@@ -68,6 +68,9 @@ while game:
         d_y *= -1
     if ball.rect.y < 0:
         d_y *= -1
+        
+    if sprite.collide_rect(ball, racket1) or sprite.collide_rect(ball, racket2):
+        d_x *= -1
     
             
     display.update()
