@@ -2,6 +2,9 @@ from pygame import *
 
 SKY_BLUE = (117, 187, 253)
 
+WIN_WIDTH = 700
+WIN_HEIGHT = 600
+
 class GameSprite(sprite.Sprite):
     def __init__(self, imagePath, corX, corY, width, height, speed):
         sprite.Sprite.__init__(self)
@@ -31,16 +34,18 @@ class Player(GameSprite):
         if keys[K_DOWN] and self.rect.y < 500:
             self.rect.y += self.speed
             
-window = display.set_mode((700, 600))
+
+window = display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 window.fill(SKY_BLUE) 
 display.set_caption('ping-pong')
 clock = time.Clock()
 
 racket1 = Player('platform.png', 5, 300, 100, 20, 4)
 racket2 = Player('platform.png', 675, 300, 100, 20, 4)
-ball = GameSprite('ball.webp', 350, 300, 65, 65, 3)
+ball = GameSprite('tenis_ball.png', 300, 300, 65, 65, 3)
 
-mixer.init()
+d_x = 3
+d_y = 3
 
 FPS = 60
 game = True
@@ -56,6 +61,14 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+        
+    ball.rect.x += d_x
+    ball.rect.y += d_y
+    if ball.rect.y > WIN_HEIGHT - ball.rect.width:
+        d_y *= -1
+    if ball.rect.y < 0:
+        d_y *= -1
+    
             
     display.update()
     clock.tick(FPS)
