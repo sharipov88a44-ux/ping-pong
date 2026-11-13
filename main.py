@@ -1,6 +1,7 @@
 from pygame import *
 
 SKY_BLUE = (117, 187, 253)
+INDIGO = (50, 18, 122)
 
 WIN_WIDTH = 700
 WIN_HEIGHT = 600
@@ -33,22 +34,26 @@ class Player(GameSprite):
             
         if keys[K_DOWN] and self.rect.y < 500:
             self.rect.y += self.speed
-            
 
 window = display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 window.fill(SKY_BLUE) 
 display.set_caption('ping-pong')
 clock = time.Clock()
+font.init()
 
 racket1 = Player('platform.png', 5, 300, 100, 20, 4)
 racket2 = Player('platform.png', 675, 300, 100, 20, 4)
 ball = GameSprite('tenis_ball.png', 300, 300, 65, 65, 3)
+
+win1 = font.SysFont('Comic Sans MS', 60).render('Игрок справа победил!', 1, INDIGO)
+win2 = font.SysFont('Comic Sans MS', 60).render('Игрок слева победил!', 1, INDIGO)
 
 d_x = 3
 d_y = 3
 
 FPS = 60
 game = True
+finish = False
 while game:
     window.fill(SKY_BLUE) 
     
@@ -57,7 +62,13 @@ while game:
     ball.reset()
     racket1.move_r()
     racket2.move_l()
+    
+    if ball.rect.x < -ball.rect.width:
+        window.blit(win1, (10, 10))
         
+    if ball.rect.x >= WIN_WIDTH + ball.rect.width:
+        window.blit(win2, (10, 10))
+     
     for e in event.get():
         if e.type == QUIT:
             game = False
