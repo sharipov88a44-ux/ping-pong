@@ -43,46 +43,48 @@ font.init()
 
 racket1 = Player('platform.png', 5, 300, 100, 20, 4)
 racket2 = Player('platform.png', 675, 300, 100, 20, 4)
-ball = GameSprite('tenis_ball.png', 300, 300, 65, 65, 3)
+ball = GameSprite('tenis_ball.png', 300, 300, 65, 65, 4)
 
 win1 = font.SysFont('Comic Sans MS', 60).render('Игрок справа победил!', 1, INDIGO)
 win2 = font.SysFont('Comic Sans MS', 60).render('Игрок слева победил!', 1, INDIGO)
 
-d_x = 3
-d_y = 3
+d_x = ball.speed
+d_y = ball.speed
 
 FPS = 60
 game = True
 finish = False
 while game:
-    window.fill(SKY_BLUE) 
-    
-    racket1.reset()
-    racket2.reset()
-    ball.reset()
-    racket1.move_r()
-    racket2.move_l()
-    
-    if ball.rect.x < -ball.rect.width:
-        window.blit(win1, (10, 10))
+    if not finish:
+        window.fill(SKY_BLUE) 
         
-    if ball.rect.x >= WIN_WIDTH + ball.rect.width:
-        window.blit(win2, (10, 10))
-     
+        racket1.reset()
+        racket2.reset()
+        ball.reset()
+        racket1.move_r()
+        racket2.move_l()
+        
+        if ball.rect.x < -ball.rect.width:
+            window.blit(win1, (10, 10))
+            finish = True
+            
+        if ball.rect.x >= WIN_WIDTH + ball.rect.width:
+            window.blit(win2, (10, 10))
+            finish = True
+         
+        ball.rect.x += d_x
+        ball.rect.y += d_y
+        if ball.rect.y > WIN_HEIGHT - ball.rect.width:
+            d_y *= -1
+        if ball.rect.y < 0:
+            d_y *= -1
+            
+        if sprite.collide_rect(ball, racket1) or sprite.collide_rect(ball, racket2):
+            d_x *= -1
+            
     for e in event.get():
         if e.type == QUIT:
-            game = False
-        
-    ball.rect.x += d_x
-    ball.rect.y += d_y
-    if ball.rect.y > WIN_HEIGHT - ball.rect.width:
-        d_y *= -1
-    if ball.rect.y < 0:
-        d_y *= -1
-        
-    if sprite.collide_rect(ball, racket1) or sprite.collide_rect(ball, racket2):
-        d_x *= -1
-    
+            game = False    
             
     display.update()
     clock.tick(FPS)
